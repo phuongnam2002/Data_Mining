@@ -37,7 +37,7 @@ class Dataset:
 
         # Chuyển Dataframe sang trainable dataset
         for id, row in self.df.iterrows():
-            datapoint = []
+            datapoint = [1]
 
             for column in columns:
                 datapoint.append(row[column])
