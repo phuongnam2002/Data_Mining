@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Nhóm 7</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" r
+            rel="stylesheet"
+            integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+            crossorigin="anonymous"
+    />
+    {% load static %}
+    <link rel="icon" href="{% static 'blue.ico' %}"/>
+    {#    <link rel="stylesheet" href="{% static 'index.css' %}" type="text/css"/>#}
+<body style="background-color:#f6d4ff;text-align:center"></body>
+</head>
+<body>
+<img class="img-fluid mx-auto"
+     src="{{ image_url }}" alt="PNG_Image"
+     id="image-display"
+     style="width: 150px; height: 90px; background-color: #f6d4ff"
+>
+
+<h1 style="font-size: 50px; color: #d427ff; font-family: sans-serif,arial,helvetica;">Welcome To Nhóm 7</h1>
+<p></p>
+</body>
+<div class="container-fluid">
+    <div class="mb-3">
+        <div class="form-floating">
+            <center>
+                <textarea class="form-control" placeholder="Fill your credit type here" id="credit_policy"
+                          style="width: 500px;height: 50px"></textarea>
+            </center>
+            <p></p>
+            <center>
+                <textarea class="form-control" placeholder="Fill your interest rate here" id="int_rate"
+                          style="width: 500px;height: 50px"></textarea>
+            </center>
+            <p></p>
+            <center>
+                            <textarea class="form-control" placeholder="Fill your installment here" id="installment"
+                                      style="width: 500px;height: 50px"></textarea>
+            </center>
+            <p></p>
+            <center>
+                            <textarea class="form-control" placeholder="Fill your natural log income here"
+                                      id="log_annual_inc"
+                                      style="width: 500px;height: 50px"></textarea>
+            </center>
+            <p></p>
+            <center>
+                            <textarea class="form-control" placeholder="Fill your debt to income here" id="dti"
+                                      style="width: 500px;height: 50px"></textarea>
+            </center>
+            <p></p>
+            <center>
+                            <textarea class="form-control" placeholder="Fill your fico point here" id="fico"
+                                      style="width: 500px;height: 50px"></textarea>
+            </center>
+            <p></p>
+            <center>
+                            <textarea class="form-control" placeholder="Fill your revolving balance here" id="revol_bal"
+                                      style="width: 500px;height: 50px"></textarea>
+            </center>
+            <p></p>
+            <center>
+                            <textarea class="form-control" placeholder="Fill your inquiries last 6 months here"
+                                      id="inq_last_6mths"
+                                      style="width: 500px;height: 50px"></textarea>
+            </center>
+            <p></p>
+            <center>
+                            <textarea class="form-control" placeholder="Fill your payment past 2 years here"
+                                      id="delinq_2yrs"
+                                      style="width: 500px;height: 50px"></textarea>
+            </center>
+            <p></p>
+            <center>
+                <select data-placeholder="Choose Your Algorithm" id="algo" class="form-select"
+                        style="width: 500px; height: 50px;">
+                    <option value="" disabled selected hidden>Choose Your Algorithm</option>
+                    <option value="Logistic Regression">Logistic Regression</option>
+                    <option value="Perceptron Learning Algorithm">Perceptron Learning Algorithm</option>
+                    <option value="Decision Tree">Decision Tree</option>
+                </select>
+            </center>
+        </div>
+        <p></p>
+        {% csrf_token %}
+        <center>
+            <button style="width: 100px; color: black; border-radius: 20px 20px 20px 20px;font-size: 20px;background-color: royalblue"
+                    type="button" class="btn btn-outline-primary"
+                    id="enter-btn">Enter
+            </button>
+        </center>
+        <p></p>
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status" style="display: none;" id="spiner">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <center>
+                <textarea class="form-control" placeholder="Your output" id="output"
+                          style="width: 500px;height: 50px"></textarea>
+        </center>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+{#<script src="{% static 'index.js' %}"></script>#}
+<script>
+    const enter_btn = document.getElementById("enter-btn")
+    const credit_policy = document.getElementById('credit_policy')
+    const int_rate = document.getElementById('int_rate')
+    const installment = document.getElementById('installment')
+    const log_annual = document.getElementById('log_annual_inc')
+    const dti = document.getElementById('dti')
+    const fico = document.getElementById('fico')
+    const revol_bal = document.getElementById('revol_bal')
+    const inq_last_6mths = document.getElementById('inq_last_6mths')
+    const delinq_2yrs = document.getElementById('delinq_2yrs')
+    const algo = document.getElementById('algo')
+    const csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0]
+    const spiner = document.getElementById('spiner')
+    const output = document.getElementById("output")
+
+    const server_url = `${window.location.protocol}//${window.location.host}`
+
+    enter_btn.onclick = async function () {
+        credit_policy_value = credit_policy.value
+        int_rate_value = int_rate.value
+        installment_value = installment.value
+        log_annual_value = log_annual.value
+        dti_value = dti.value
+        fico_value = fico.value
+        revol_bal_value = revol_bal.value
+        inq_last_6mths_value = inq_last_6mths.value
+        delinq_2yrs_value = delinq_2yrs.value
+        algo_value = algo.value
+
+        console.log(algo_value)
+
+        token = csrf_token.value
+        spiner.style.display = "flex"
+        await $.ajax({
+            type: "POST",
+            url: server_url,
+            headers: {
+                "X-CSRFToken": token
+            },
+            data: {
+                "credit_policy": credit_policy_value,
+                "int_rate": int_rate_value,
+                "installment": installment_value,
+                "log_annual_inc": log_annual_value,
+                "dti": dti_value,
+                "fico": fico_value,
+                "revol_bal": revol_bal_value,
+                "inq_last_6mths": inq_last_6mths_value,
+                "delinq_2yrs": delinq_2yrs_value,
+                "algo": algo_value
+            },
+            success: function (result) {
+                console.log(result)
+                output.value = result['answer']
+            },
+            dataType: "json"
+        });
+        spiner.style.display = "none"
+        output.style.display = "flex"
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>

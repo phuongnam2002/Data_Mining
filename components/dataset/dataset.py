@@ -15,6 +15,10 @@ class Dataset:
 
     def load_data(self):
         self.df = read_csv(self.file_path)
+        self.df.drop(columns='purpose', inplace=True)
+        self.df.drop(columns='days.with.cr.line', inplace=True)
+        self.df.drop(columns='revol.util', inplace=True)
+        self.df.drop(columns='pub.rec', inplace=True)
 
         columns = self.df.columns.values.tolist()
 
@@ -37,10 +41,12 @@ class Dataset:
 
         # Chuyển Dataframe sang trainable dataset
         for id, row in self.df.iterrows():
-            datapoint = [1]
+            datapoint = []
 
             for column in columns:
                 datapoint.append(row[column])
+
+            datapoint = list(map(float, datapoint))
 
             self.input.append(datapoint)
 
