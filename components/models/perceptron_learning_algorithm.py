@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    dataset = Dataset(file_path='data/train/loan_data.csv')
+    dataset = Dataset(file_path='data/train/loan_data_train.csv')
     dataset.load_data()
 
     dataset.labels = [-1 if x == 0 else 1 for x in dataset.labels]

@@ -253,7 +253,7 @@ def decision_tree_gini(Xdata, ydata, pre_pruning="none", chi_lim=0.1, min_lim=5)
 
 
 if __name__ == '__main__':
-    df = pd.read_csv('data/train/loan_data.csv')
+    df = pd.read_csv('data/train/loan_data_train.csv')
 
     X = df.iloc[:, :-1]
     y = df.iloc[:, -1]

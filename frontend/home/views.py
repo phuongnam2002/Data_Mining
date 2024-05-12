@@ -16,7 +16,7 @@ if not sys.warnoptions:
 
     warnings.simplefilter("ignore")
 
-dataset = Dataset(file_path='data/train/loan_data.csv')
+dataset = Dataset(file_path='data/train/loan_data_train.csv')
 dataset.load_data()
 
 logistic_model = LogisticRegression(random_state=0, max_iter=10000)

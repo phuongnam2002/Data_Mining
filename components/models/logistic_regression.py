@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    dataset = Dataset(file_path='data/train/loan_data.csv')
+    dataset = Dataset(file_path='data/train/loan_data_train.csv')
     dataset.load_data()
 
     logistic = Logistic_Regression(dataset.input, dataset.labels, args)
