@@ -43,7 +43,7 @@ class PLA:
         self.weight = w[-1]
         return
 
-    def test(self, x):
+    def predict(self, x):
         output = sign(self.weight, x)
 
         return max(output, 0)

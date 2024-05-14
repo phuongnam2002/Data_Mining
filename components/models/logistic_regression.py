@@ -43,7 +43,7 @@ class Logistic_Regression:
 
         return
 
-    def test(self, x):
+    def predict(self, x):
         return sigmoid(np.dot(self.weight.T, x))
 
 
