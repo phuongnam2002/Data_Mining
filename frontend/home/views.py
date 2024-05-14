@@ -1,13 +1,15 @@
-import sys
 import os
+import sys
+import argparse
 import numpy as np
 from django.views import View
 from django.shortcuts import render
 from django.http import JsonResponse
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.linear_model import Perceptron, LogisticRegression
 
 from components.dataset.dataset import Dataset
+from components.models.decision_tree import DecisionTreeID3
+from components.models.perceptron_learning_algorithm import PLA
+from components.models.logistic_regression import Logistic_Regression
 
 np.random.seed(23)
 
@@ -16,17 +18,30 @@ if not sys.warnoptions:
 
     warnings.simplefilter("ignore")
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--epoch', type=int, default=10)
+parser.add_argument('--eta', type=float, default=0.05)
+parser.add_argument('--max_depth', type=int, default=200)
+parser.add_argument('--max_count', type=int, default=10000)
+parser.add_argument('--logging_step', type=int, default=20)
+parser.add_argument('--threshold', type=float, default=1e-5)
+parser.add_argument('--min_samples_split', type=int, default=2)
+
+args = parser.parse_args()
+
 dataset = Dataset(file_path='data/train/loan_data_train.csv')
 dataset.load_data()
 
-logistic_model = LogisticRegression(random_state=0, max_iter=10000)
-logistic_model.fit(dataset.input, dataset.labels)
+logistic = Logistic_Regression(dataset.input, dataset.labels, args)
+logistic.train()
 
-perceptron_model = Perceptron(random_state=0, max_iter=10000, tol=1e-6)
-perceptron_model.fit(dataset.input, dataset.labels)
+tree = DecisionTreeID3(dataset.input, dataset.labels, args)
+tree.fit()
 
-decision_tree = DecisionTreeClassifier()
-decision_tree.fit(dataset.input, dataset.labels)
+dataset.labels = [-1 if x == 0 else 1 for x in dataset.labels]
+
+pla = PLA(dataset.input, dataset.labels, args)
+pla.train()
 
 
 # Create your models here.
@@ -59,11 +74,11 @@ class IndexView(View):
         )
 
         if algo == "Logistic Regression":
-            answer = logistic_model.predict(input)[0]
+            answer = logistic.predict(input)[0]
         elif algo == "Perceptron Learning Algorithm":
-            answer = perceptron_model.predict(input)[0]
+            answer = pla.predict(input)[0]
         else:
-            answer = decision_tree.predict(input)[0]
+            answer = tree.predict(input)[0]
 
         if answer == 0:
             answer = "Người này không đủ khả năng chi trả khoản nợ"
