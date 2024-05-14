@@ -34,6 +34,9 @@ class Dataset:
         # Loại bỏ các hàng bị lặp (nếu có)
         self.df.drop_duplicates(inplace=True)
 
+        # Loại bỏ các hàng có giá trị NaN (nếu có)
+        self.df.dropna(inplace=True)
+
         # Tách label ra khỏi Dataframe
         columns.remove('not.fully.paid')
         self.labels = self.df['not.fully.paid'].values.copy().tolist()
