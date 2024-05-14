@@ -44,7 +44,11 @@ class Logistic_Regression:
         return
 
     def predict(self, x):
-        return sigmoid(np.dot(self.weight.T, x))
+        pred = sigmoid(np.dot(self.weight.T, x))
+
+        pred = [1 if val >= 0.5 else 0 for val in pred]
+
+        return pred
 
 
 if __name__ == '__main__':
